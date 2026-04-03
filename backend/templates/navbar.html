@@ -1,0 +1,62 @@
+<nav class="navbar navbar-expand-lg navbar-dark bg-primary shadow">
+  <div class="container-fluid">
+
+    <!-- Brand -->
+    <a class="navbar-brand fw-bold" href="{{ url_for('home') }}">
+      🩺 DiabetesCare
+    </a>
+
+    <!-- Mobile Toggle Button -->
+    <button class="navbar-toggler" type="button" data-bs-toggle="collapse"
+            data-bs-target="#navbarNav"
+            aria-controls="navbarNav"
+            aria-expanded="false"
+            aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+
+    <!-- Navbar Links -->
+    <div class="collapse navbar-collapse" id="navbarNav">
+
+      <ul class="navbar-nav ms-auto align-items-center">
+
+        <li class="nav-item">
+          <a class="nav-link" href="{{ url_for('home') }}">Home</a>
+        </li>
+
+        <li class="nav-item">
+          <a class="nav-link" href="{{ url_for('dashboard') }}">Dashboard</a>
+        </li>
+
+        <li class="nav-item">
+          <a class="nav-link" href="{{ url_for('chat') }}">Chat</a>
+        </li>
+
+        <li class="nav-item">
+          <a class="nav-link" href="{{ url_for('history') }}">History</a>
+        </li>
+
+        <li class="nav-item">
+          <a class="nav-link" href="{{ url_for('profile') }}">Profile</a>
+        </li>
+
+        <!-- Username Display -->
+        {% if session.get('username') %}
+        <li class="nav-item ms-3">
+          <span class="navbar-text text-white">
+            👤 {{ session['username'] }}
+          </span>
+        </li>
+        {% endif %}
+
+        <!-- Logout Button -->
+        <li class="nav-item ms-3">
+          <a class="btn btn-warning btn-sm" href="{{ url_for('logout') }}">
+            Logout
+          </a>
+        </li>
+
+      </ul>
+    </div>
+  </div>
+</nav>

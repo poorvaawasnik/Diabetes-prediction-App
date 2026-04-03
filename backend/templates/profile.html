@@ -1,0 +1,282 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+
+<meta charset="UTF-8">
+<title>My Profile</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+
+<style>
+
+body{
+background:#f4f7fb;
+font-family:"Segoe UI", sans-serif;
+}
+
+/* NAVBAR */
+
+.navbar{
+background:white !important;
+border-bottom:1px solid #eee;
+}
+
+.navbar-brand{
+font-weight:700;
+color:#2f64ff !important;
+}
+
+.explore-btn{
+background:#3b82f6;
+border:none;
+border-radius:20px;
+padding:6px 14px;
+color:white;
+}
+
+.explore-btn:hover{
+background:#2563eb;
+}
+
+/* MAIN */
+
+.main{
+margin-top:80px;
+}
+
+/* PAGE */
+
+.page-title{
+font-weight:700;
+}
+
+/* PROFILE */
+
+.profile-card{
+background:white;
+border-radius:20px;
+padding:30px;
+box-shadow:0 10px 30px rgba(0,0,0,0.08);
+}
+
+.avatar{
+width:120px;
+height:120px;
+border-radius:50%;
+object-fit:cover;
+}
+
+/* CARD */
+
+.card-box{
+background:white;
+border-radius:18px;
+padding:25px;
+box-shadow:0 10px 25px rgba(0,0,0,0.05);
+margin-bottom:25px;
+}
+
+.label{
+font-size:12px;
+color:gray;
+}
+
+.value{
+font-weight:500;
+}
+
+</style>
+
+</head>
+
+<body>
+
+<!-- 🔥 NAVBAR -->
+<nav class="navbar navbar-expand-lg shadow-sm">
+<div class="container-fluid">
+
+<a class="navbar-brand" href="/featureslogin">
+🩺 DiabetesCare AI
+</a>
+
+<button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+<span class="navbar-toggler-icon"></span>
+</button>
+
+<div class="collapse navbar-collapse" id="navbarNav">
+
+<ul class="navbar-nav ms-auto">
+
+<li class="nav-item">
+<a class="nav-link" href="/featureslogin">Dashboard</a>
+</li>
+
+<li class="nav-item">
+<a class="nav-link" href="/chat">AI Assistant</a>
+</li>
+
+<li class="nav-item">
+<a class="nav-link" href="/history">History</a>
+</li>
+
+<li class="nav-item">
+<a class="nav-link active" href="/profile">Profile</a>
+</li>
+
+<li class="nav-item ms-2">
+<a class="btn btn-primary btn-sm" href="/home">🧠 Predict</a>
+</li>
+
+<li class="nav-item ms-2">
+<a class="btn explore-btn btn-sm" href="/featureslogin">🚀 Explore</a>
+</li>
+
+<li class="nav-item ms-2">
+<a class="btn btn-warning btn-sm" href="/logout">Logout</a>
+</li>
+
+</ul>
+
+</div>
+</div>
+</nav>
+
+<!-- 🔥 MAIN CONTENT -->
+<div class="container main py-4">
+
+<h2 class="page-title">My Profile</h2>
+<p class="text-muted">Manage your profile, account settings, and security.</p>
+
+<div class="row mt-4">
+
+<!-- LEFT PROFILE -->
+
+<div class="col-md-4">
+
+<div class="profile-card text-center">
+
+<img src="{{ url_for('static', filename='profile_pics/' + profile_pic) }}" class="avatar shadow">
+
+<h4 class="mt-3">{{ username }}</h4>
+
+<p class="text-muted">Clinical Index #2</p>
+
+<hr>
+
+<p>
+<strong>Account Status</strong><br>
+<span class="badge bg-success">Verified</span>
+</p>
+
+<p>
+<strong>Predictions Made</strong><br>
+{{ prediction_count }} Records
+</p>
+
+<form action="/upload_profile_pic" method="POST" enctype="multipart/form-data">
+
+<input type="file" name="profile_pic" class="form-control mb-2">
+
+<button class="btn btn-primary btn-sm w-100">
+Upload Photo
+</button>
+
+</form>
+
+<a href="/logout" class="btn btn-outline-dark mt-3 w-100">
+Sign Out
+</a>
+
+</div>
+
+</div>
+
+<!-- RIGHT SIDE -->
+
+<div class="col-md-8">
+
+<div class="card-box">
+
+<div class="d-flex justify-content-between">
+
+<h5>Patient Parameters</h5>
+
+<a href="/edit_profile" class="btn btn-outline-primary btn-sm">
+Edit Profile
+</a>
+
+</div>
+
+<div class="row mt-3">
+
+<div class="col-md-6">
+<p class="label">USERNAME</p>
+<p class="value">{{ username }}</p>
+</div>
+
+<div class="col-md-6">
+<p class="label">EMAIL ADDRESS</p>
+<p class="value">{{ email }}</p>
+</div>
+
+<div class="col-md-6">
+<p class="label">ACCOUNT ROLE</p>
+
+{% if role == "admin" %}
+<span class="badge bg-danger">Admin</span>
+{% else %}
+<span class="badge bg-primary">User</span>
+{% endif %}
+
+</div>
+
+<div class="col-md-6">
+<p class="label">ACCOUNT STATUS</p>
+<p class="value text-success">Active Session Verified</p>
+</div>
+
+</div>
+
+</div>
+
+<!-- SECURITY -->
+
+<div class="card-box">
+
+<h5 class="mb-3">Encryption & Security</h5>
+
+<div class="d-flex justify-content-between align-items-center border p-3 rounded mb-3">
+
+<div>
+<strong>Password</strong>
+<p class="text-muted mb-0">Manage your password</p>
+</div>
+
+<a href="/change_password" class="btn btn-outline-dark btn-sm">
+Change Password
+</a>
+
+</div>
+
+<div class="d-flex justify-content-between align-items-center border p-3 rounded">
+
+<div>
+<strong>Biometric Authentication</strong>
+<p class="text-muted mb-0">Multi-factor security protocol</p>
+</div>
+
+<span class="badge bg-secondary">Inactive</span>
+
+</div>
+
+</div>
+
+</div>
+
+</div>
+
+</div>
+
+</body>
+</html>

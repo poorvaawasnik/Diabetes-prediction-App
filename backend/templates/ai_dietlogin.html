@@ -1,0 +1,497 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+
+<meta charset="UTF-8">
+<title>AI Diet | DiabetesCare AI</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+
+<style>
+
+body{
+font-family:"Segoe UI",sans-serif;
+background:#f5f7fb;
+margin:0;
+}
+
+/* TOPBAR */
+
+.topbar{
+position:fixed;
+top:0;
+left:0;
+right:0;
+height:60px;
+background:#f1f3f7;
+display:flex;
+align-items:center;
+padding:0 25px;
+z-index:1000;
+}
+
+.brand{
+font-size:18px;
+font-weight:600;
+color:#1f2937;
+}
+
+.home-btn{
+margin-left:auto;
+background:#3b82f6;
+color:white;
+text-decoration:none;
+padding:8px 18px;
+border-radius:10px;
+font-size:14px;
+font-weight:500;
+display:flex;
+align-items:center;
+gap:6px;
+}
+
+.home-btn:hover{
+background:#2563eb;
+color:white;
+}
+
+/* SIDEBAR */
+
+.sidebar{
+width:230px;
+height:calc(100vh - 60px);
+position:fixed;
+top:60px;
+background:white;
+padding:25px;
+box-shadow:2px 0 15px rgba(0,0,0,0.05);
+}
+
+.logo{
+font-weight:700;
+margin-bottom:25px;
+}
+
+.sidebar a{
+display:block;
+padding:10px;
+margin-bottom:6px;
+text-decoration:none;
+color:#555;
+border-radius:8px;
+font-size:14px;
+}
+
+.sidebar a:hover{
+background:#f0f4ff;
+}
+
+.sidebar .active{
+background:#e8f0ff;
+color:#2563eb;
+font-weight:600;
+}
+
+/* MAIN */
+
+.main{
+margin-left:250px;
+padding:35px;
+margin-top:70px;
+}
+
+.page-title{
+font-size:26px;
+font-weight:700;
+}
+
+.page-sub{
+color:#6b7280;
+margin-bottom:20px;
+}
+
+/* CARD */
+
+.card-box{
+background:white;
+padding:16px;
+border-radius:12px;
+box-shadow:0 6px 16px rgba(0,0,0,0.05);
+}
+
+/* KPI CARDS */
+
+.kpi-card{
+display:flex;
+align-items:center;
+gap:12px;
+background:white;
+padding:12px;
+border-radius:10px;
+box-shadow:0 4px 12px rgba(0,0,0,0.05);
+}
+
+.kpi-icon{
+width:36px;
+height:36px;
+display:flex;
+align-items:center;
+justify-content:center;
+border-radius:8px;
+font-size:16px;
+color:white;
+}
+
+.bg-blue{background:#2563eb;}
+.bg-green{background:#10b981;}
+.bg-orange{background:#f59e0b;}
+.bg-red{background:#ef4444;}
+
+.kpi-card p{
+margin:0;
+font-size:12px;
+color:#6b7280;
+}
+
+.kpi-card h4{
+margin:0;
+font-weight:700;
+font-size:18px;
+}
+
+/* DAY CARD */
+
+.diet-day-card{
+background:white;
+border-radius:12px;
+padding:14px;
+box-shadow:0 4px 12px rgba(0,0,0,0.06);
+border-top:3px solid #2563eb;
+}
+
+/* DAY TITLE */
+
+.day-title{
+font-weight:700;
+color:#2563eb;
+margin-bottom:8px;
+font-size:16px;
+}
+
+/* MEAL CARD */
+
+.meal-card{
+background:#f7f9ff;
+border-radius:10px;
+padding:8px 10px;
+margin-bottom:6px;
+display:flex;
+gap:8px;
+font-size:13px;
+line-height:1.4;
+}
+
+.meal-icon{
+font-size:16px;
+}
+
+/* CHART */
+
+.chart-box{
+height:220px;
+}
+
+/* LOADER */
+
+.loader{
+display:none;
+text-align:center;
+margin-top:15px;
+}
+
+</style>
+
+</head>
+
+<body>
+
+<!-- TOPBAR -->
+
+<div class="topbar">
+<span class="brand">DiabetesCare AI</span>
+<a href="/home" class="home-btn">Predict</a>
+</div>
+
+<!-- SIDEBAR -->
+
+<div class="sidebar">
+
+<div class="logo">DiabetesCare AI</div>
+
+<a href="/featureslogin">🏠 Dashboard</a>
+<a href="/health_scorelogin">💙 Health Score</a>
+<a href="/sugar_trackerlogin">🩸 Sugar Tracker</a>
+<a class="active">🍽 AI Diet</a>
+<a href="/nearby_services">🏥 Nearby Services</a>
+
+</div>
+
+<!-- MAIN -->
+
+<div class="main">
+
+<h2 class="page-title">Nutritional Protocols</h2>
+
+<p class="page-sub">
+Personalized nutritional algorithms based on metabolic state.
+</p>
+
+<!-- INPUT -->
+
+<div class="card-box">
+
+<div class="row g-2">
+
+<div class="col-md-9">
+<input type="text" id="dietInput" class="form-control"
+placeholder="e.g. Vegetarian, Keto, Low Carb">
+</div>
+
+<div class="col-md-3">
+<button class="btn btn-primary w-100" onclick="generateDiet()">
+Generate Diet
+</button>
+</div>
+
+</div>
+
+<div class="loader" id="loader">
+<div class="spinner-border text-primary"></div>
+<p>Generating diet...</p>
+</div>
+
+</div>
+
+<!-- DOWNLOAD -->
+
+<div class="mt-3">
+<button class="btn btn-success btn-sm" onclick="downloadDietPDF()">
+📄 Download Diet
+</button>
+</div>
+
+<!-- DIET RESULT -->
+
+<div id="dietResult" class="row mt-4 g-3"></div>
+
+<!-- KPI -->
+
+<div class="row mt-4 g-3">
+
+<div class="col-md-3">
+<div class="kpi-card">
+<div class="kpi-icon bg-blue">🔥</div>
+<div>
+<p>Calories</p>
+<h4 id="caloriesValue">1800</h4>
+</div>
+</div>
+</div>
+
+<div class="col-md-3">
+<div class="kpi-card">
+<div class="kpi-icon bg-green">🥩</div>
+<div>
+<p>Protein</p>
+<h4 id="proteinValue">90g</h4>
+</div>
+</div>
+</div>
+
+<div class="col-md-3">
+<div class="kpi-card">
+<div class="kpi-icon bg-orange">🍞</div>
+<div>
+<p>Carbs</p>
+<h4 id="carbsValue">150g</h4>
+</div>
+</div>
+</div>
+
+<div class="col-md-3">
+<div class="kpi-card">
+<div class="kpi-icon bg-red">🥑</div>
+<div>
+<p>Fats</p>
+<h4 id="fatValue">70g</h4>
+</div>
+</div>
+</div>
+
+</div>
+
+<!-- CHARTS -->
+
+<div class="row mt-4">
+
+<div class="col-md-6">
+<div class="card-box">
+<h6>📊 Weekly Diet Analytics</h6>
+<div class="chart-box">
+<canvas id="nutritionChart"></canvas>
+</div>
+</div>
+</div>
+
+<div class="col-md-6">
+<div class="card-box">
+<h6>🥗 Macronutrient Distribution</h6>
+<div class="chart-box">
+<canvas id="macroChart"></canvas>
+</div>
+</div>
+</div>
+
+</div>
+
+</div>
+
+<script>
+
+let nutritionChart
+let macroChart
+
+function generateDiet(){
+
+let diet=document.getElementById("dietInput").value
+
+if(diet===""){
+alert("Enter diet preference")
+return
+}
+
+document.getElementById("loader").style.display="block"
+
+fetch("/generate_diet",{
+method:"POST",
+headers:{"Content-Type":"application/x-www-form-urlencoded"},
+body:`diet=${diet}`
+})
+.then(res=>res.json())
+.then(data=>{
+
+document.getElementById("loader").style.display="none"
+
+formatDiet(data.diet)
+showCharts()
+
+})
+
+}
+
+function formatDiet(text){
+
+let container=document.getElementById("dietResult")
+container.innerHTML=""
+
+for(let i=1;i<=7;i++){
+
+let meals=text.split("\n")
+let mealHTML=""
+
+meals.forEach(m=>{
+
+if(m.trim()==="") return
+
+let icon="🍽"
+
+if(m.toLowerCase().includes("breakfast")) icon="🍳"
+if(m.toLowerCase().includes("lunch")) icon="🥗"
+if(m.toLowerCase().includes("dinner")) icon="🍛"
+if(m.toLowerCase().includes("snack")) icon="🥜"
+if(m.toLowerCase().includes("hydration")) icon="💧"
+
+mealHTML+=`
+
+<div class="meal-card">
+<div class="meal-icon">${icon}</div>
+<div>${m}</div>
+</div>
+
+`
+
+})
+
+container.innerHTML+=`
+
+<div class="col-lg-4 col-md-6">
+<div class="diet-day-card">
+<div class="day-title">Day ${i}</div>
+${mealHTML}
+</div>
+</div>
+
+`
+
+}
+
+}
+
+function showCharts(){
+
+let calories=1800
+let protein=90
+let carbs=150
+let fats=70
+
+document.getElementById("caloriesValue").innerText=calories
+document.getElementById("proteinValue").innerText=protein+"g"
+document.getElementById("carbsValue").innerText=carbs+"g"
+document.getElementById("fatValue").innerText=fats+"g"
+
+let ctx1=document.getElementById("nutritionChart")
+
+if(nutritionChart) nutritionChart.destroy()
+
+nutritionChart=new Chart(ctx1,{
+type:"bar",
+data:{
+labels:["Calories","Protein","Carbs","Fats"],
+datasets:[{
+data:[calories,protein,carbs,fats],
+backgroundColor:["#2563eb","#10b981","#f59e0b","#ef4444"]
+}]
+},
+options:{plugins:{legend:{display:false}}}
+})
+
+let ctx2=document.getElementById("macroChart")
+
+if(macroChart) macroChart.destroy()
+
+macroChart=new Chart(ctx2,{
+type:"pie",
+data:{
+labels:["Protein","Carbs","Fats"],
+datasets:[{
+data:[protein,carbs,fats],
+backgroundColor:["#10b981","#f59e0b","#ef4444"]
+}]
+}
+})
+
+}
+
+function downloadDietPDF(){
+let element=document.getElementById("dietResult")
+html2pdf().from(element).save("diet_plan.pdf")
+}
+
+</script>
+
+</body>
+</html>

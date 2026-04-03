@@ -1,0 +1,407 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+
+<meta charset="UTF-8">
+<title>Blood Sugar Tracker | DiabetesCare AI</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+<style>
+
+body{
+font-family:"Segoe UI",sans-serif;
+background:#f5f7fb;
+margin:0;
+}
+
+/* TOPBAR */
+
+.topbar{
+position:fixed;
+top:0;
+left:0;
+right:0;
+height:60px;
+background:#f1f3f7;
+display:flex;
+align-items:center;
+padding:0 25px;
+z-index:1000;
+}
+
+.home-btn{
+margin-left:auto;
+background:#3b82f6;
+color:white;
+text-decoration:none;
+padding:8px 18px;
+border-radius:10px;
+font-size:14px;
+font-weight:500;
+}
+
+.home-btn:hover{
+background:#2563eb;
+color:white;
+}
+
+/* SIDEBAR */
+
+.sidebar{
+width:250px;
+height:calc(100vh - 60px);
+position:fixed;
+top:60px;
+background:white;
+padding:25px;
+box-shadow:2px 0 15px rgba(0,0,0,0.05);
+}
+
+.sidebar a{
+display:block;
+padding:12px;
+margin-bottom:10px;
+text-decoration:none;
+color:#555;
+border-radius:10px;
+}
+
+.sidebar a:hover{
+background:#eef4ff;
+}
+
+.sidebar .active{
+background:#e8f0ff;
+color:#2563eb;
+font-weight:600;
+}
+
+/* MAIN */
+
+.main{
+margin-left:270px;
+padding:40px;
+margin-top:70px;
+}
+
+.title{
+font-size:32px;
+font-weight:700;
+}
+
+.subtitle{
+color:#6b7280;
+margin-bottom:30px;
+}
+
+/* CARD */
+
+.card-box{
+background:white;
+padding:30px;
+border-radius:16px;
+box-shadow:0 8px 20px rgba(0,0,0,0.05);
+}
+
+/* INPUT */
+
+.glucose-input{
+font-size:28px;
+font-weight:700;
+text-align:center;
+height:60px;
+}
+
+/* BUTTON */
+
+.btn-main{
+background:#2563eb;
+border:none;
+padding:12px;
+border-radius:10px;
+color:white;
+font-weight:600;
+width:100%;
+}
+
+.btn-main:hover{
+background:#1d4ed8;
+}
+
+/* RESULT */
+
+.result{
+margin-top:15px;
+font-size:18px;
+font-weight:600;
+}
+
+/* ADVICE */
+
+.advice-box{
+background:#f0f7ff;
+padding:18px;
+border-radius:10px;
+margin-top:15px;
+font-size:14px;
+}
+
+/* INFO CARDS */
+
+.info-card{
+background:white;
+padding:20px;
+border-radius:12px;
+box-shadow:0 6px 18px rgba(0,0,0,0.05);
+text-align:center;
+}
+
+.dot{
+height:8px;
+width:8px;
+border-radius:50%;
+display:inline-block;
+margin-bottom:8px;
+}
+
+.green{background:#10b981;}
+.orange{background:#f59e0b;}
+.red{background:#ef4444;}
+.blue{background:#3b82f6;}
+
+/* CHART */
+
+.chart-container{
+height:250px;
+}
+
+</style>
+
+</head>
+
+<body>
+
+<!-- TOPBAR -->
+
+<div class="topbar">
+<span class="fw-bold">DiabetesCare AI</span>
+<a href="/" class="home-btn">🏠 Home</a>
+</div>
+
+<!-- SIDEBAR -->
+
+<div class="sidebar">
+
+<h5>🩺 DiabetesCare AI</h5>
+
+<a href="/features">🏠 Dashboard</a>
+<a href="/health_score">💙 Health Score</a>
+<a class="active">🩸 Sugar Tracker</a>
+<a href="/ai_diet">🍽 AI Diet</a>
+<a href="/nearby_services">🏥 Nearby Services</a>
+
+</div>
+
+<!-- MAIN -->
+
+<div class="main">
+
+<h2 class="title">Blood Sugar Tracker</h2>
+
+<p class="subtitle">
+Real-time prandial glucose monitoring and interpretation.
+</p>
+
+<!-- INPUT -->
+
+<div class="card-box">
+
+<div class="row g-3">
+
+<div class="col-md-4">
+
+<label>Blood Sugar Value</label>
+
+<input type="number" id="sugar" class="form-control glucose-input" placeholder="000">
+
+<small>mg/dL</small>
+
+</div>
+
+<div class="col-md-4">
+
+<label>Assessment Type</label>
+
+<select id="type" class="form-control">
+
+<option>Fasting Glucose</option>
+<option>Post Meal</option>
+<option>Random Test</option>
+
+</select>
+
+</div>
+
+<div class="col-md-4">
+
+<button class="btn-main mt-4" onclick="analyzeSugar()">
+ANALYZE LEVEL
+</button>
+
+</div>
+
+</div>
+
+<div id="result" class="result"></div>
+
+</div>
+
+<!-- CHART -->
+
+<div class="card-box mt-4">
+
+<h5>📊 Blood Sugar Trend</h5>
+
+<div class="chart-container">
+<canvas id="sugarChart"></canvas>
+</div>
+
+</div>
+
+<!-- ADVICE -->
+
+<div class="card-box mt-4">
+
+<h5>🧠 AI Glucose Advice</h5>
+
+<div id="advice" class="advice-box">
+Enter a sugar value to receive AI recommendations.
+</div>
+
+</div>
+
+<!-- INFO -->
+
+<div class="row mt-4 g-4">
+
+<div class="col-md-3">
+<div class="info-card">
+<span class="dot green"></span>
+<p class="text-muted">OPTIMAL</p>
+<h6>70 – 100</h6>
+</div>
+</div>
+
+<div class="col-md-3">
+<div class="info-card">
+<span class="dot orange"></span>
+<p class="text-muted">ELEVATED</p>
+<h6>100 – 125</h6>
+</div>
+</div>
+
+<div class="col-md-3">
+<div class="info-card">
+<span class="dot red"></span>
+<p class="text-muted">HIGH</p>
+<h6>126+</h6>
+</div>
+</div>
+
+<div class="col-md-3">
+<div class="info-card">
+<span class="dot blue"></span>
+<p class="text-muted">LOW</p>
+<h6>&lt; 70</h6>
+</div>
+</div>
+
+</div>
+
+</div>
+
+<script>
+
+let sugarHistory=[]
+let chart
+
+function analyzeSugar(){
+
+let sugar=document.getElementById("sugar").value
+
+if(!sugar){
+alert("Enter sugar value")
+return
+}
+
+let result=""
+
+if(sugar<70){
+result="🔵 Low Blood Sugar"
+}
+else if(sugar<=100){
+result="🟢 Normal Blood Sugar"
+}
+else if(sugar<=125){
+result="🟡 Elevated Blood Sugar"
+}
+else{
+result="🔴 High Blood Sugar"
+}
+
+document.getElementById("result").innerHTML=result
+
+sugarHistory.push(Number(sugar))
+
+updateChart()
+getAdvice(sugar)
+
+}
+
+function updateChart(){
+
+let ctx=document.getElementById("sugarChart")
+
+if(chart) chart.destroy()
+
+chart=new Chart(ctx,{
+type:"line",
+data:{
+labels:sugarHistory.map((_,i)=>"Entry "+(i+1)),
+datasets:[{
+data:sugarHistory,
+borderWidth:3,
+tension:0.4,
+fill:true
+}]
+},
+options:{
+responsive:true,
+maintainAspectRatio:false,
+plugins:{legend:{display:false}}
+}
+})
+
+}
+
+async function getAdvice(sugar){
+
+let response=await fetch("/glucose_advice",{
+method:"POST",
+headers:{"Content-Type":"application/json"},
+body:JSON.stringify({sugar:sugar})
+})
+
+let data=await response.json()
+
+document.getElementById("advice").innerText=data.advice
+
+}
+
+</script>
+
+</body>
+</html>

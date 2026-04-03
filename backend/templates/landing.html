@@ -1,0 +1,413 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+
+<meta charset="UTF-8">
+<title>DiabetesCare AI</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/particles.js"></script>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/chartjs-chart-geo@3.9.0/build/index.umd.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/topojson-client@3"></script>
+
+<style>
+body{
+    font-family:"Segoe UI",sans-serif;
+    background:linear-gradient(180deg,#f8fbff,#eef3fb);
+}
+
+/* NAVBAR */
+.navbar{
+    background:white;
+    box-shadow:0 2px 10px rgba(0,0,0,0.05);
+}
+
+/* HERO */
+.hero{
+    padding:130px 0;
+    background:linear-gradient(135deg,#3b82f6,#2563eb);
+    color:white;
+}
+
+.hero-title{
+    font-size:56px;
+    font-weight:800;
+}
+
+.hero-text{
+    color:#e0e7ff;
+    font-size:18px;
+    margin-top:20px;
+}
+
+/* BUTTON */
+.btn-main{
+    background:white;
+    color:#2563eb;
+    padding:14px 28px;
+    border-radius:12px;
+    font-weight:600;
+}
+
+.btn-outline-custom{
+    border:2px solid white;
+    padding:14px 28px;
+    border-radius:12px;
+    color:white;
+}
+
+/* FEATURES */
+.features{
+    padding:90px 0;
+}
+
+.feature-card{
+    background:white;
+    padding:35px;
+    border-radius:18px;
+    box-shadow:0 15px 40px rgba(0,0,0,0.08);
+    text-align:center;
+    transition:0.3s;
+}
+
+.feature-card:hover{
+    transform:translateY(-10px);
+}
+
+/* STATS */
+.stats{
+    background:linear-gradient(135deg,#2563eb,#1e40af);
+    color:white;
+    padding:90px 0;
+    text-align:center;
+}
+
+.counter{
+    font-size:48px;
+    font-weight:800;
+}
+
+/* CHART CARDS */
+.chart-card{
+    background:white;
+    padding:30px;
+    border-radius:18px;
+    box-shadow:0 15px 40px rgba(0,0,0,0.05);
+}
+
+/* CTA */
+.cta{
+    background:linear-gradient(135deg,#1e40af,#1e3a8a);
+    color:white;
+    padding:100px 0;
+    text-align:center;
+}
+
+.hero-image{
+    max-width:520px;
+    width:100%;
+    border-radius:20px;
+    box-shadow:0 30px 60px rgba(0,0,0,0.25);
+    transition:transform 0.3s ease;
+}
+
+.hero-image:hover{
+    transform:scale(1.05);
+}
+
+#particles-js{
+    position:absolute;
+    width:100%;
+    height:100%;
+    top:0;
+    left:0;
+    z-index:0;
+}
+
+.hero .container{
+    position:relative;
+    z-index:2;
+}
+
+/* FOOTER */
+footer{
+    background:#111;
+    color:white;
+    padding:25px;
+    text-align:center;
+}
+</style>
+
+</head>
+<body>
+
+<nav class="navbar navbar-expand-lg">
+    <div class="container">
+        <a class="navbar-brand fw-bold">🩺 DiabetesCare AI</a>
+    </div>
+</nav>
+
+<section class="hero position-relative">
+    <div id="particles-js"></div>
+
+    <div class="container position-relative">
+        <div class="row align-items-center">
+
+            <!-- LEFT TEXT -->
+            <div class="col-md-6 text-white">
+                <h1 class="hero-title">
+                    AI Powered Diabetes Risk Detection
+                </h1>
+
+                <p class="hero-text">
+                    Our AI analyzes clinical indicators to detect diabetes risk early and provide actionable health insights.
+                </p>
+
+                <div class="mt-4">
+                    <a href="/login" class="btn btn-main me-3">Predict Diabetes</a>
+                    <a href="/features" class="btn btn-outline-custom">Explore Features</a>
+                </div>
+            </div>
+
+            <!-- RIGHT IMAGE -->
+            <div class="col-md-6 text-center">
+                <img src="{{ url_for('static', filename='doctor-ai.png') }}" class="img-fluid hero-image">
+            </div>
+
+        </div>
+    </div>
+</section>
+
+<section class="features">
+    <div class="container">
+        <h2 class="text-center mb-5">Platform Highlights</h2>
+
+        <div class="row g-4">
+
+            <div class="col-md-4">
+                <div class="feature-card">
+                    <h1>🔍</h1>
+                    <h4>AI Risk Prediction</h4>
+                    <p>Machine learning predicts diabetes risk using health indicators.</p>
+                </div>
+            </div>
+
+            <div class="col-md-4">
+                <div class="feature-card">
+                    <h1>🤖</h1>
+                    <h4>AI Medical Assistant</h4>
+                    <p>Ask diabetes related questions and receive AI guidance.</p>
+                </div>
+            </div>
+
+            <div class="col-md-4">
+                <div class="feature-card">
+                    <h1>📊</h1>
+                    <h4>Health Dashboard</h4>
+                    <p>Track health metrics and metabolic analytics.</p>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</section>
+
+<section class="stats">
+    <div class="container">
+        <div class="row">
+
+            <div class="col-md-4">
+                <h2 class="counter" data-target="95">0</h2>
+                <p>Prediction Accuracy %</p>
+            </div>
+
+            <div class="col-md-4">
+                <h2 class="counter" data-target="10000">0</h2>
+                <p>Health Assessments</p>
+            </div>
+
+            <div class="col-md-4">
+                <h2 class="counter" data-target="24">0</h2>
+                <p>AI Medical Support</p>
+            </div>
+
+        </div>
+    </div>
+</section>
+
+<section class="py-5">
+    <div class="container">
+        <h2 class="text-center mb-5">🌍 Global Diabetes Statistics</h2>
+
+        <div class="row g-4">
+            <div class="col-md-6">
+                <div class="chart-card">
+                    <canvas id="worldChart"></canvas>
+                </div>
+            </div>
+
+            <div class="col-md-6">
+                <div class="chart-card">
+                    <canvas id="regionChart"></canvas>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section class="py-5 bg-light">
+    <div class="container">
+        <h2 class="text-center mb-5">Global Diabetes Prevalence</h2>
+
+        <div class="row align-items-center">
+
+            <div class="col-md-7">
+                <div class="chart-card">
+                    <canvas id="worldMap" height="200"></canvas>
+                </div>
+            </div>
+
+            <div class="col-md-5">
+                <h4 class="mb-4">Key Global Insights</h4>
+
+                <ul class="list-group list-group-flush">
+                    <li class="list-group-item">🌎 Over <strong>537 million adults</strong> worldwide live with diabetes</li>
+                    <li class="list-group-item">📈 Cases expected to reach <strong>643 million by 2030</strong></li>
+                    <li class="list-group-item">🌏 Asia has the <strong>highest diabetes prevalence</strong></li>
+                    <li class="list-group-item">⚠️ Nearly <strong>50% remain undiagnosed</strong></li>
+                    <li class="list-group-item">💡 Early detection prevents serious complications</li>
+                </ul>
+            </div>
+
+        </div>
+    </div>
+</section>
+
+<section class="cta">
+    <div class="container">
+        <h2>Take Control of Your Health Today</h2>
+        <br>
+        <a href="/register" class="btn btn-light btn-lg">Create Free Account</a>
+    </div>
+</section>
+
+<footer>
+    <p>© 2026 DiabetesCare AI | AI Powered Healthcare</p>
+</footer>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+
+<script>
+/* COUNTER ANIMATION */
+const counters = document.querySelectorAll('.counter');
+
+counters.forEach(counter => {
+    const update = () => {
+        const target = +counter.getAttribute('data-target');
+        const current = +counter.innerText;
+        const increment = Math.ceil(target / 100);
+
+        if (current < target) {
+            counter.innerText = current + increment;
+            setTimeout(update, 20);
+        } else {
+            counter.innerText = target;
+        }
+    }
+    update();
+});
+
+/* CHARTS */
+new Chart(document.getElementById('worldChart'), {
+    type: 'line',
+    data: {
+        labels: ['2000','2005','2010','2015','2020','2025'],
+        datasets: [{
+            label: 'Global Diabetes Cases (Millions)',
+            data: [151,194,285,415,537,643],
+            borderColor: '#3b82f6',
+            backgroundColor: 'rgba(59,130,246,0.2)',
+            fill: true
+        }]
+    }
+});
+
+new Chart(document.getElementById('regionChart'), {
+    type: 'bar',
+    data: {
+        labels: ['Asia','Europe','North America','Africa','South America'],
+        datasets: [{
+            label: 'Population with Diabetes (Millions)',
+            data: [320,61,51,24,32],
+            backgroundColor: ['#3b82f6','#6366f1','#22c55e','#f59e0b','#ef4444']
+        }]
+    }
+});
+
+/* WORLD MAP */
+fetch('https://unpkg.com/world-atlas/countries-110m.json')
+.then(res => res.json())
+.then(topology => {
+    const countries = ChartGeo.topojson.feature(
+        topology,
+        topology.objects.countries
+    ).features;
+
+    const data = countries.map(country => ({
+        feature: country,
+        value: Math.random() * 100
+    }));
+
+    new Chart(document.getElementById("worldMap"), {
+        type: "choropleth",
+        data: {
+            labels: countries.map(d => d.properties.name),
+            datasets: [{ data: data }]
+        },
+        options: {
+            plugins: { legend: { display: false } },
+            scales: {
+                projection: { axis: 'x', projection: 'equalEarth' },
+                color: { axis: 'x', quantize: 5 }
+            }
+        }
+    });
+});
+</script>
+
+<script>
+particlesJS("particles-js", {
+    particles: {
+        number: { value: 80 },
+        color: { value: "#ffffff" },
+        shape: { type: "circle" },
+        opacity: { value: 0.3 },
+        size: { value: 3 },
+        line_linked: {
+            enable: true,
+            distance: 150,
+            color: "#ffffff",
+            opacity: 0.2,
+            width: 1
+        },
+        move: { enable: true, speed: 2 }
+    },
+    interactivity: {
+        detect_on: "canvas",
+        events: {
+            onhover: { enable: true, mode: "repulse" },
+            resize: true
+        },
+        modes: {
+            repulse: { distance: 80 }
+        }
+    },
+    retina_detect: true
+});
+</script>
+
+</body>
+</html>

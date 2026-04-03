@@ -1,0 +1,333 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+
+<meta charset="UTF-8">
+<title>Health Score | DiabetesCare AI</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+<style>
+
+body{
+font-family:"Segoe UI",sans-serif;
+background:#f5f7fb;
+margin:0;
+}
+
+/* TOPBAR */
+
+.topbar{
+position:fixed;
+top:0;
+left:0;
+right:0;
+height:60px;
+background:#f1f3f7;
+display:flex;
+align-items:center;
+padding:0 25px;
+z-index:1000;
+}
+
+.home-btn{
+margin-left:auto;
+background:#3b82f6;
+color:white;
+text-decoration:none;
+padding:8px 18px;
+border-radius:10px;
+font-size:14px;
+font-weight:500;
+}
+
+.home-btn:hover{
+background:#2563eb;
+color:white;
+}
+
+/* SIDEBAR */
+
+.sidebar{
+width:250px;
+height:calc(100vh - 60px);
+position:fixed;
+top:60px;
+background:white;
+padding:25px;
+box-shadow:2px 0 15px rgba(0,0,0,0.05);
+}
+
+.logo{
+font-weight:700;
+font-size:18px;
+margin-bottom:35px;
+}
+
+.sidebar a{
+display:block;
+padding:12px;
+margin-bottom:10px;
+text-decoration:none;
+color:#555;
+border-radius:10px;
+}
+
+.sidebar a:hover{
+background:#eef4ff;
+}
+
+.sidebar .active{
+background:#e8f0ff;
+color:#2563eb;
+font-weight:600;
+}
+
+/* MAIN */
+
+.main{
+margin-left:270px;
+padding:40px;
+margin-top:70px;
+}
+
+.title{
+font-size:28px;
+font-weight:700;
+}
+
+.subtitle{
+color:#6b7280;
+margin-bottom:25px;
+}
+
+/* CARD */
+
+.card-box{
+background:white;
+padding:28px;
+border-radius:16px;
+box-shadow:0 8px 20px rgba(0,0,0,0.05);
+}
+
+/* RESULT CARD */
+
+.result-card{
+background:#f9fafb;
+border-radius:16px;
+padding:25px;
+text-align:center;
+}
+
+/* SCORES */
+
+.score{
+font-size:50px;
+font-weight:700;
+color:#2563eb;
+}
+
+.heart-score{
+font-size:30px;
+color:#e11d48;
+font-weight:700;
+}
+
+/* BUTTON */
+
+.btn-main{
+background:#2563eb;
+border:none;
+padding:12px;
+border-radius:10px;
+color:white;
+font-weight:600;
+width:100%;
+}
+
+.btn-main:hover{
+background:#1d4ed8;
+}
+
+/* CHART */
+
+.chart-container{
+height:260px;
+max-width:420px;
+margin:auto;
+}
+
+</style>
+
+</head>
+
+<body>
+
+<!-- TOPBAR -->
+
+<div class="topbar">
+<span class="fw-bold">DiabetesCare AI</span>
+<a href="/" class="home-btn">🏠 Home</a>
+</div>
+
+<!-- SIDEBAR -->
+
+<div class="sidebar">
+
+<div class="logo">🩺 DiabetesCare AI</div>
+
+<a href="/features">🏠 Dashboard</a>
+<a class="active">💙 Health Score</a>
+<a href="/sugar_tracker">🩸 Sugar Tracker</a>
+<a href="/ai_diet">🍽 AI Diet</a>
+<a href="/nearby_services">🏥 Nearby Services</a>
+
+</div>
+
+<!-- MAIN -->
+
+<div class="main">
+
+<h2 class="title">Patient Metabolic Index</h2>
+
+<p class="subtitle">
+Quantitative biometric analysis of systemic health efficiency.
+</p>
+
+<div class="card-box">
+
+<div class="row g-4">
+
+<!-- INPUT -->
+
+<div class="col-md-5">
+
+<h5 class="mb-3">Patient Assessment</h5>
+
+<label>Age</label>
+<input type="number" id="age" class="form-control mb-3">
+
+<label>Weight</label>
+<input type="number" id="weight" class="form-control mb-3">
+
+<label>Sleep Hours</label>
+<input type="number" id="sleep" class="form-control mb-3">
+
+<label>Activity Level</label>
+
+<select id="activity" class="form-control mb-4">
+<option>Sedentary</option>
+<option>Light Activity</option>
+<option selected>Moderate Activity</option>
+<option>High Activity</option>
+</select>
+
+<button class="btn-main" onclick="calculateScore()">
+Calculate Score
+</button>
+
+</div>
+
+<!-- RESULT -->
+
+<div class="col-md-7">
+
+<div class="result-card">
+
+<div id="scoreDisplay">
+<p class="text-muted">
+Enter patient parameters to generate score
+</p>
+</div>
+
+<div class="chart-container mt-3">
+<canvas id="healthChart"></canvas>
+</div>
+
+</div>
+
+</div>
+
+</div>
+
+</div>
+
+</div>
+
+<script>
+
+let chart;
+
+function calculateScore(){
+
+let age=document.getElementById("age").value;
+let weight=document.getElementById("weight").value;
+let sleep=document.getElementById("sleep").value;
+let activity=document.getElementById("activity").value;
+
+if(!age || !weight || !sleep){
+alert("Please fill all fields");
+return;
+}
+
+let score=100;
+
+if(age>40) score-=10;
+if(age>60) score-=10;
+
+if(weight>90) score-=15;
+if(weight>110) score-=20;
+
+if(sleep<6) score-=20;
+if(sleep>=7 && sleep<=8) score+=5;
+
+if(activity==="Sedentary") score-=15;
+if(activity==="Moderate Activity") score+=10;
+if(activity==="High Activity") score+=15;
+
+score=Math.max(0,Math.min(100,score));
+
+let heartScore=Math.floor(score*0.9);
+
+document.getElementById("scoreDisplay").innerHTML=`
+<div class="score">${score}</div>
+<p>Metabolic Health Score</p>
+
+<div class="mt-3 heart-score">❤️ ${heartScore}</div>
+<p>Heart Health Score</p>
+`;
+
+let data={
+labels:["Age","Weight","Sleep","Activity"],
+datasets:[{
+data:[
+100-age,
+100-weight,
+sleep*10,
+activity==="Sedentary"?30:
+activity==="Moderate Activity"?70:90
+],
+backgroundColor:["#22c55e","#ef4444","#f59e0b","#3b82f6"],
+borderWidth:0
+}]
+};
+
+if(chart) chart.destroy();
+
+chart=new Chart(document.getElementById("healthChart"),{
+type:"doughnut",
+data:data,
+options:{
+cutout:"70%",
+plugins:{legend:{position:"right"}}
+}
+});
+
+}
+
+</script>
+
+</body>
+</html>
