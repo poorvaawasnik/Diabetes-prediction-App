@@ -2,7 +2,7 @@
 
 A web-based intelligent system for **diabetes prediction and health monitoring** using Machine Learning.
 
-----
+-------------------------------------------------------------------------------------------------------------------------------------------------------------------
 
 ## 🚀 Features
 
