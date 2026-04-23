@@ -16,7 +16,7 @@ A web-based intelligent system for **diabetes prediction and health monitoring**
 - 📈 Prediction History Tracking
 - 👤 User Profile Management
 
----
+-------------------------------------------------------------------------------------------------------------------------------------------------------------------
 
 ## 🧠 Machine Learning
 
