@@ -37,7 +37,7 @@ A web-based intelligent system for **diabetes prediction and health monitoring**
   - Prediction → Diabetic / Non-Diabetic
   - Risk Score (%)
 
----
+----------
 
 ## 🏗 System Architecture
 
